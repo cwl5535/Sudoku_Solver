@@ -1,22 +1,33 @@
-with open('sudoku1.csv', newline = '') as file:
-    for line in file.readlines():
-        row = ''
-        for char in line:
-            prev_char = line[(line.index(char)-1)] 
-            if (char == ";" and prev_char == ";"):
-                row += ("0;")
-            else: 
-                row += (char + ";")
+class Puzzle:
+    def __init__(self, filename):
+        self.filename = filename
+        self.importData()
 
-            # if (line[0] == ";") or (line[-1] == ";"): 
-            #     row += ("0" + char)
-            # elif (char != ';'): 
-            #     row += (char + ";")
-        print(row)
-        # print(row)
-        # for char in line:
-        #     new_char = char.strip("\r")
-        #     blank_row.append(char)
-        # print(blank_row)
-    #         edited_row = row.append(char).replace(";", "0")
-    # print(edited_row)
+    def importData(self):
+        '''
+        Data is imported and formatted. Zeros are inserted where there are empty spaces. 
+        '''
+        with open(self.filename) as file:
+            puzzle = []
+            for lines in file.readlines():
+                line = lines.rstrip()
+                row = []
+                idx = -1
+                for char in line:
+                    row.append(char)
+                for char in row: 
+                    if char == row[idx]:
+                        row.insert(idx+1, "0")
+                    elif row[0] == ";":
+                        row.insert(0, "0")
+                    elif row[-1] == ";":
+                        row.append("0")
+                    idx += 1
+                puzzle.append(row)
+            for row in puzzle: 
+                print(row)
+#TODO begin solving Sudoku, watch lecture videos
+
+
+
+puzzle1 = Puzzle('sudoku1.csv')
