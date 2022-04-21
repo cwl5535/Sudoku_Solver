@@ -2,7 +2,7 @@ class Puzzle:
     def __init__(self, filename):
         self.filename = filename
         self.rows = []
-        self.options = list(range(1,10))
+        # self.options = list(range(1,10))
         self.importData()
 
     def importData(self):
@@ -30,22 +30,30 @@ class Puzzle:
                 self.rows.append(row)
             # for row in self.rows:
             #     # print(row)
-#TODO start with a Greedy search and then work with local search
-#TODO create list of options to work with and remove options if value is in the row, column, or grid
+#TODO apply greedy after each row is filtered
     def filterOptions(self):
         for row in self.rows:
+            options =  ['1', '2', '3', '4', '5', '6', '7', '8', '9']
             for val in row:
-                if val in self.options:
-                    self.options.remove(val)
-                print(self.options)
-    def Greedy(self):
-        
+                if val in options:
+                    options.remove(val)  # removing the option if it exists in the row
+                    print(options), print("REMOVED " + val)
+            print("----NEW ROW----")
+    # def Greedy(self):
+    #     self.filterOptions()
+    #     for row in self.rows:
+    #         for val in row: 
+    #             if val == "0":
+    #                 guess = self.options[0]
+    #                 val.replace("0", str(guess))
+    #                 self.options.remove(guess)
+                
     # def tryGuess(): 
     #     if 
     # def backtrack(): 
 
 
-puzzle1 = Puzzle('sudoku1.csv').Greedy()
+puzzle1 = Puzzle('sudoku1.csv').filterOptions()
 # print("----break----")
 # puzzle2 = Puzzle('sudoku2.csv')
 # print("----break----")
