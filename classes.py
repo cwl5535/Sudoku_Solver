@@ -31,29 +31,44 @@ class Puzzle:
             # for row in self.rows:
             #     # print(row)
 #TODO apply greedy after each row is filtered
-    def filterOptions(self):
-        for row in self.rows:
+    def filterOptions(self, row, options):
+        # for row in self.rows:
+        #     options =  ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+        for val in row:
+            if val in options:
+                options.remove(val)  # removing the option if it exists in the row
+                # print(options), print("REMOVED " + val)
+        return options
+        # print("----NEW ROW----")
+
+    def Greedy(self):
+        row_no = 1
+        for row in self.rows: 
             options =  ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+            filtered_options = self.filterOptions(row, options)
+            index = 0
+
             for val in row:
-                if val in options:
-                    options.remove(val)  # removing the option if it exists in the row
-                    print(options), print("REMOVED " + val)
-            print("----NEW ROW----")
-    # def Greedy(self):
-    #     self.filterOptions()
-    #     for row in self.rows:
-    #         for val in row: 
-    #             if val == "0":
-    #                 guess = self.options[0]
-    #                 val.replace("0", str(guess))
-    #                 self.options.remove(guess)
+                if len(options) == 0:  # if there are no more options, leave loop
+                    break 
+                elif val == "0":
+                    row[index] = filtered_options[0]
+                filtered_options.pop(0)
+                index += 1
+            # print("options: " + str(filtered_options))
+            print("row " + str(row_no) + ": " + str(row))
+            row_no += 1
+            # print(row), print("----NEW ROW----")
+    #TODO figure out why 0s aren't being replaced with filtered options
+
+
                 
     # def tryGuess(): 
     #     if 
     # def backtrack(): 
 
 
-puzzle1 = Puzzle('sudoku1.csv').filterOptions()
+puzzle1 = Puzzle('sudoku1.csv').Greedy()
 # print("----break----")
 # puzzle2 = Puzzle('sudoku2.csv')
 # print("----break----")
