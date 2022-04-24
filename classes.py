@@ -53,19 +53,16 @@ class Puzzle:
                     break 
                 elif val == "0":
                     row[index] = filtered_options[0]
-                filtered_options.pop(0)
+                    filtered_options.pop(0)
+                # print("options: " + str(filtered_options))
                 index += 1
-            # print("options: " + str(filtered_options))
-            print("row " + str(row_no) + ": " + str(row))
+            # print("row " + str(row_no) + ": " + str(row))
             row_no += 1
-            # print(row), print("----NEW ROW----")
-    #TODO figure out why 0s aren't being replaced with filtered options
+
+def improve(self):
+    
 
 
-                
-    # def tryGuess(): 
-    #     if 
-    # def backtrack(): 
 
 
 puzzle1 = Puzzle('sudoku1.csv').Greedy()
