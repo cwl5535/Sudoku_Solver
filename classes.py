@@ -1,9 +1,136 @@
+
+class Cell:
+    def __init__(self, value, rows, row = [], col = []):
+        self.value = value
+        self.row = row 
+        self.col = col
+        self.rows = rows
+        self.options = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    
+    def assignGrid(self):
+
+        ''' 
+    Grid Numbering: 
+
+    |__1__||__2__||__3__|
+    |__4__||__5__||__6__|
+    |__7__||__8__||__9__|
+    
+        '''
+
+        if self.row_no <= 2:
+            if self.col_no <= 2:
+                self.grid_location = 1
+            elif (self.col_no > 2) and (self.col_no <= 5):
+                self.grid_location = 2
+            elif (self.col_no > 5) and (self.col_no < 10):
+                self.grid_location = 3
+        elif  (self.row_no > 2) and  (self.row_no <= 5):
+            if self.col_no <= 2:
+                self.grid_location = 4
+            elif (self.col_no > 2) and (self.col_no <= 5):
+                self.grid_location = 5
+            elif (self.col_no > 5) and (self.col_no < 10):
+                self.grid_location = 6
+        elif  (self.row_no > 5) and  (self.row_no < 10):
+            if self.col_no <= 2:
+                self.grid_location = 7
+            elif (self.col_no > 2) and (self.col_no <= 5):
+                self.grid_location = 8
+            elif (self.col_no > 5) and (self.col_no < 10):
+                self.grid_location = 9
+
 class Puzzle:
     def __init__(self, filename):
+        self.cells = []
         self.filename = filename
         self.rows = []
-        # self.options = list(range(1,10))
-        self.importData()
+        self.importData()  # puzzle is created with 0s as placeholders for non fixed values
+        self.columns = [[],[],[],[],[],[],[],[],[]]
+        self.createColumns()
+        self.createCells()
+        self.assignCellLocations()
+        self.createGrid()
+
+    def createGrid(self): # want a list of options within in the grid
+        grids = [[],[],[],[],[],[],[],[],[]]
+        for row in self.cells: # self.cells are Cell objects
+
+            # Create list of all the grids based on the cells location number
+            for cell in row: 
+                if cell.grid_location == 1:
+                    grids[0].append(cell.value)
+                elif cell.grid_location == 2:
+                    grids[1].append(cell.value)
+                elif cell.grid_location == 3:
+                    grids[2].append(cell.value)
+                elif cell.grid_location == 4:
+                    grids[3].append(cell.value)
+                elif cell.grid_location == 5:
+                    grids[4].append(cell.value)
+                elif cell.grid_location == 6:
+                    grids[5].append(cell.value)
+                elif cell.grid_location == 7:
+                    grids[6].append(cell.value)
+                elif cell.grid_location == 8:
+                    grids[7].append(cell.value)
+                elif cell.grid_location == 9:
+                    grids[8].append(cell.value)
+
+    # assign an attribute 'grid' to each cell based on the cells within its grid
+        for row in self.cells:
+            for cell in row:       
+                if cell.grid_location == 1:
+                    cell.grid = grids[0]
+                elif cell.grid_location == 2:
+                    cell.grid = grids[1]
+                elif cell.grid_location == 3:
+                    cell.grid = grids[2]
+                elif cell.grid_location == 4:
+                    cell.grid = grids[3]
+                elif cell.grid_location == 5:
+                    cell.grid = grids[4]
+                elif cell.grid_location == 6:
+                    cell.grid = grids[5]
+                elif cell.grid_location == 7:
+                    cell.grid = grids[6]
+                elif cell.grid_location == 8:
+                    cell.grid = grids[7]
+                elif cell.grid_location == 9:
+                    cell.grid = grids[8]
+
+
+    def assignCellLocations(self):
+        r = 0
+        for row in self.cells: 
+            c = 0
+            for cell in row: 
+                self.cells[r][c].row_no = self.cells.index(row)  # each cells row number
+                self.cells[r][c].col_no = self.cells[self.cells[r][c].row_no].index(cell) # each cells column number
+                self.cells[r][c].assignGrid()  #assigns grid number to cell instance
+                c += 1
+                # can only index the list within the list so the row which gives column value
+            r += 1
+    
+    def createColumns(self):
+        # modifies self.columns matrix to give to each Cell instance to know what other values are in its column
+        for row in self.rows:
+            loop = 0 
+            for col in row: 
+                    self.columns[loop].append(col)  # trying to get [[col_1],[col_2],[col_3],[col_4]]
+                    loop += 1
+        # print(self.columns[0])
+
+    def createCells(self):
+        # create Cell instances and add to 'cells' attribute
+        for row in self.rows:
+            self.cell_row = []
+            loop = 0 
+            for col in row: 
+                self.cell_row.append(Cell(col, self.rows, row, self.columns[loop]))  # create a matrix of cells
+                loop += 1
+            self.cells.append(self.cell_row)
+        # print(self.cells)
 
     def importData(self):
         '''
@@ -28,24 +155,29 @@ class Puzzle:
                     idx += 1
                 row = list(filter(lambda val: val != ";", row))  # removes semicolons
                 self.rows.append(row)
-            # for row in self.rows:
-            #     # print(row)
-#TODO apply greedy after each row is filtered
-    def filterOptions(self, row, options):
-        # for row in self.rows:
-        #     options =  ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-        for val in row:
-            if val in options:
-                options.remove(val)  # removing the option if it exists in the row
-                # print(options), print("REMOVED " + val)
-        return options
-        # print("----NEW ROW----")
+
+    def filterCellOptions(self):
+        # check values in row
+        for val in self.row:
+            if val in self.options:
+                self.options.remove(val)  # removing the option if it exists in the row
+        
+        # check values in column
+        for val in self.col: 
+            if val in self.options: 
+                self.options.remove(val)
+
+        # check values in grid
+        for val in self.grid:
+            if val in self.options:
+                self.options.remove(val)
 
     def Greedy(self):
+        # method for initial attempt to solve the problem 
         row_no = 1
         for row in self.rows: 
             options =  ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-            filtered_options = self.filterOptions(row, options)
+            filtered_options = self.filterOptions(row, options)  #returns a list named 'options' that contains numbers that aren't in the current row
             index = 0
 
             for val in row:
@@ -56,23 +188,34 @@ class Puzzle:
                     filtered_options.pop(0)
                 # print("options: " + str(filtered_options))
                 index += 1
-            # print("row " + str(row_no) + ": " + str(row))
+            print("row " + str(row_no) + ": " + str(row))
             row_no += 1
+        return self.rows
 
-def improve(self):
-    
+# def improve(rows):
+#     # check each value now, starting with the second row (assuming first row is right)
+#     for val in rows[1::]:
+
+        
+
+# def columnCheck(self):
+#     # check at the cell level
+#     options = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+#     options.pop(index(self.rows[0][]))
+#     for item in self.rows: 
+# # 
+
+# def gridCheck(self): 
+    # check at the cell level
+    # if index() = 0, 3, 6 look to the right 2, if index() = 1,4,7 look to the left and right, and if index() == 2,5,8 look to the left two
 
 
 
+#TODO figure out how to make improve a method of class puzzle? 
 
-puzzle1 = Puzzle('sudoku1.csv').Greedy()
-# print("----break----")
-# puzzle2 = Puzzle('sudoku2.csv')
-# print("----break----")
-# puzzle3 = Puzzle('sudoku3.csv')
-# print("----break----")
-# puzzle4 = Puzzle('sudoku4.csv')
-# print("----break----")
-# puzzle5 = Puzzle('sudoku5.csv')
-# print("----break----")
-# puzzle6 = Puzzle('sudoku6.csv')
+# puzzle1 = Puzzle('sudoku1.csv').cells
+# print(puzzle1)
+
+
+# print(puzzle1.rows)
+# improve(puzzle1.rows)
