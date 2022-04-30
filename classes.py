@@ -2,7 +2,7 @@ class Puzzle:
     def __init__(self, filename):
         self.filename = filename
         self.rows = []
-        # self.options = list(range(1,10))
+        self.options = list(range(1,10))
         self.importData()
 
     def importData(self):
@@ -30,39 +30,19 @@ class Puzzle:
                 self.rows.append(row)
             # for row in self.rows:
             #     # print(row)
-#TODO apply greedy after each row is filtered
-    def filterOptions(self, row, options):
-        # for row in self.rows:
-        #     options =  ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-        for val in row:
-            if val in options:
-                options.remove(val)  # removing the option if it exists in the row
-                # print(options), print("REMOVED " + val)
-        return options
-        # print("----NEW ROW----")
-
-    def Greedy(self):
-        row_no = 1
-        for row in self.rows: 
-            options =  ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-            filtered_options = self.filterOptions(row, options)
-            index = 0
-
+#TODO start with a Greedy search and then work with local search
+#TODO create list of options to work with and remove options if value is in the row, column, or grid
+    def filterOptions(self):
+        for row in self.rows:
             for val in row:
-                if len(options) == 0:  # if there are no more options, leave loop
-                    break 
-                elif val == "0":
-                    row[index] = filtered_options[0]
-                    filtered_options.pop(0)
-                # print("options: " + str(filtered_options))
-                index += 1
-            # print("row " + str(row_no) + ": " + str(row))
-            row_no += 1
-
-def improve(self):
-    
-
-
+                if val in self.options:
+                    self.options.remove(val)
+                print(self.options)
+    def Greedy(self):
+        
+    # def tryGuess(): 
+    #     if 
+    # def backtrack(): 
 
 
 puzzle1 = Puzzle('sudoku1.csv').Greedy()
