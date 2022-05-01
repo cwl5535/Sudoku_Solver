@@ -1,10 +1,11 @@
 
 class Cell:
-    def __init__(self, value, rows, row = [], col = []):
+    def __init__(self, value, rows, fixed, row = [], col = []):
         self.value = value
         self.row = row 
         self.col = col
         self.rows = rows
+        self.fixed = fixed
         self.options = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     
     def assignGrid(self):
@@ -39,6 +40,22 @@ class Cell:
                 self.grid_location = 8
             elif (self.col_no > 5) and (self.col_no < 10):
                 self.grid_location = 9
+
+    def filterCellOptions(self):
+        # check values in row
+        for val in self.row:
+            if val in self.options:
+                self.options.remove(val)  # removing the option if it exists in the row
+        
+        # check values in column
+        for val in self.col: 
+            if val in self.options: 
+                self.options.remove(val)
+
+        # check values in grid
+        for val in self.grid:
+            if val in self.options:
+                self.options.remove(val)
 
 class Puzzle:
     def __init__(self, filename):
@@ -99,7 +116,6 @@ class Puzzle:
                 elif cell.grid_location == 9:
                     cell.grid = grids[8]
 
-
     def assignCellLocations(self):
         r = 0
         for row in self.cells: 
@@ -127,7 +143,11 @@ class Puzzle:
             self.cell_row = []
             loop = 0 
             for col in row: 
-                self.cell_row.append(Cell(col, self.rows, row, self.columns[loop]))  # create a matrix of cells
+                # self.cell_row.append(Cell(col, self.rows, row, self.columns[loop]))  # create a matrix of cells
+                if col != '0': 
+                    self.cell_row.append(Cell(col, self.rows, True, row, self.columns[loop]))  # create a matrix of cells
+                else:
+                    self.cell_row.append(Cell(col, self.rows, False, row, self.columns[loop]))  # create a matrix of cells
                 loop += 1
             self.cells.append(self.cell_row)
         # print(self.cells)
@@ -156,41 +176,30 @@ class Puzzle:
                 row = list(filter(lambda val: val != ";", row))  # removes semicolons
                 self.rows.append(row)
 
-    def filterCellOptions(self):
-        # check values in row
-        for val in self.row:
-            if val in self.options:
-                self.options.remove(val)  # removing the option if it exists in the row
-        
-        # check values in column
-        for val in self.col: 
-            if val in self.options: 
-                self.options.remove(val)
-
-        # check values in grid
-        for val in self.grid:
-            if val in self.options:
-                self.options.remove(val)
-
     def Greedy(self):
         # method for initial attempt to solve the problem 
-        row_no = 1
-        for row in self.rows: 
-            options =  ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-            filtered_options = self.filterOptions(row, options)  #returns a list named 'options' that contains numbers that aren't in the current row
-            index = 0
+        for row in self.cells: 
+            for cell in row:
+                cell.filterCellOptions() 
+                if not cell.fixed: 
+                    cell.value = (cell.options[0])
+                    cell.options.pop(0)
 
-            for val in row:
-                if len(options) == 0:  # if there are no more options, leave loop
-                    break 
-                elif val == "0":
-                    row[index] = filtered_options[0]
-                    filtered_options.pop(0)
-                # print("options: " + str(filtered_options))
-                index += 1
-            print("row " + str(row_no) + ": " + str(row))
-            row_no += 1
-        return self.rows
+        self.toPuzzle()
+    
+    def toPuzzle(self):
+        # puzzle_list = []
+        for row in self.cells: 
+            row_list = []
+            for cell in row: 
+                row_list.append(cell.value)
+            print(row_list)
+            # puzzle_list.append(row_list)
+
+
+#TODO self.row, self.col, and self.grid need to be updated after each guess so that the filter works
+        
+
 
 # def improve(rows):
 #     # check each value now, starting with the second row (assuming first row is right)
@@ -208,14 +217,3 @@ class Puzzle:
 # def gridCheck(self): 
     # check at the cell level
     # if index() = 0, 3, 6 look to the right 2, if index() = 1,4,7 look to the left and right, and if index() == 2,5,8 look to the left two
-
-
-
-#TODO figure out how to make improve a method of class puzzle? 
-
-# puzzle1 = Puzzle('sudoku1.csv').cells
-# print(puzzle1)
-
-
-# print(puzzle1.rows)
-# improve(puzzle1.rows)
