@@ -129,16 +129,26 @@ class Puzzle:
             r += 1
     
     def createColumns(self):
+        '''
+        Puzzle Method
+        Actions: 
+        Creates: 
+        Returns: self.columns 
+        '''
         # modifies self.columns matrix to give to each Cell instance to know what other values are in its column
         for row in self.rows:
             loop = 0 
             for col in row: 
                     self.columns[loop].append(col)  # trying to get [[col_1],[col_2],[col_3],[col_4]]
                     loop += 1
-        # print(self.columns[0])
+        return self.columns
 
     def createCells(self):
-        # create Cell instances and add to 'cells' attribute
+        '''
+        Puzzle Method
+        Actions: Used to create the self.cells attribute
+        Creates: self.cells (Puzzle object attribute containing a list of lists. Each list is a puzzle row containing 'Cell' objects)
+        '''
         for row in self.rows:
             self.cell_row = []
             loop = 0 
@@ -154,7 +164,8 @@ class Puzzle:
 
     def importData(self):
         '''
-        Data is imported and formatted. Zeros are inserted where there are empty spaces. 
+        Puzzle Method
+        Actions: Used to import and format data. Zeros are inserted where there are empty spaces. 
         '''
         with open(self.filename) as file:
             puzzle = []
@@ -177,24 +188,66 @@ class Puzzle:
                 self.rows.append(row)
 
     def Greedy(self):
-        # method for initial attempt to solve the problem 
+        '''
+        Puzzle Method
+        Actions: Used for initial attempt to solve the problem 
+        '''
         for row in self.cells: 
             for cell in row:
                 cell.filterCellOptions() 
                 if not cell.fixed: 
                     cell.value = (cell.options[0])
                     cell.options.pop(0)
+                self.createColumns()
+                # self.createCells()
+                # self.assignCellLocations()
+                # self.createGrid()
 
         self.toPuzzle()
+        print("Cost: " + str(self.getCost()))
     
+    def getCost(self) -> int:
+        '''
+        Puzzle Method
+        Returns: cost (int) - the total cost of each row of the puzzle i.e. how many cells will need to be changed after the Greedy
+        '''
+        puzzle_rows = self.toPuzzle()
+        assert type(puzzle_rows) is list
+        cost = 0
+        for row in puzzle_rows: 
+            row_cost = 0
+            puzzle_appeared = []
+            row_appeared = []
+            assert type(row) is list
+            for cell in row: 
+                if cell not in puzzle_appeared:  # if the cell hasn't appeared already, add it to the list
+                    puzzle_appeared.append(cell)
+                elif cell not in row_appeared:
+                    row_appeared.append(cell)
+                else:
+                    cost += 1
+                    row_cost += 1
+            print("Row Cost: " + str(row_cost))
+        return cost
+
+#TODO figure out cost, either cost by row or entire puzzle
+
+
     def toPuzzle(self):
-        # puzzle_list = []
+        '''
+        Puzzle Method
+        Actions: Prints each row of the puzzle
+        Returns: puzzle_list (list) - list of lists containing the entire puzzle, where each row is a list
+        '''
+        puzzle_list = []
         for row in self.cells: 
             row_list = []
             for cell in row: 
                 row_list.append(cell.value)
             print(row_list)
-            # puzzle_list.append(row_list)
+            puzzle_list.append(row_list)
+        #print(puzzle_list)
+        return puzzle_list
 
 
 #TODO self.row, self.col, and self.grid need to be updated after each guess so that the filter works
