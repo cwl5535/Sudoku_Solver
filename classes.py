@@ -1,6 +1,7 @@
 
 class Cell:
     def __init__(self, value, rows, fixed, row = [], col = []):
+        # cells also have .row_no and .col_no
         self.value = value
         self.row = row 
         self.col = col
@@ -56,6 +57,46 @@ class Cell:
         for val in self.grid:
             if val in self.options:
                 self.options.remove(val)
+
+    def updates(self, puzzle_object): 
+        self.updateColumns(puzzle_object)
+        self.updateRows(puzzle_object)
+        # grids updated with Puzzle method, createGrid()
+    
+    def updateRows(self, puzzle_object): 
+
+        #create updated rows
+        rows = [[],[],[],[],[],[],[],[],[]]
+        for row in puzzle_object.cells: 
+            rows.append(row)
+        
+        # assign updated rows to Cell objects self.row attribute
+        for row in puzzle_object.cells:
+            idx = 0 
+            for cell in row: 
+                if cell.row_no == idx: 
+                    cell.row = rows[idx]
+                    assert type(cell.row) is list # test
+            idx += 1
+
+    def updateColumns(self, puzzle_object): 
+        
+        #create updated columns
+        columns = [[],[],[],[],[],[],[],[],[]]
+        for row in puzzle_object.cells:
+            loop = 0 
+            for col in row: 
+                    columns[loop].append(col.value)  # trying to get [[col_1],[col_2],[col_3],[col_4]]
+                    loop += 1
+        
+        # assign updated rows to Cell objects self.col attribute
+        for row in puzzle_object.cells:
+            idx = 0 
+            for cell in row: 
+                if cell.col_no == idx: 
+                    cell.col = columns[idx]
+                    assert type(cell.col) is list # test
+            idx += 1           
 
 class Puzzle:
     def __init__(self, filename):
@@ -150,7 +191,7 @@ class Puzzle:
         Creates: self.cells (Puzzle object attribute containing a list of lists. Each list is a puzzle row containing 'Cell' objects)
         '''
         for row in self.rows:
-            self.cell_row = []
+            self.cell_row = []  # placeholder list
             loop = 0 
             for col in row: 
                 # self.cell_row.append(Cell(col, self.rows, row, self.columns[loop]))  # create a matrix of cells
@@ -192,19 +233,33 @@ class Puzzle:
         Puzzle Method
         Actions: Used for initial attempt to solve the problem 
         '''
+        
         for row in self.cells: 
             for cell in row:
                 cell.filterCellOptions() 
+                print(self.cells[cell.row_no-1])
+                print(cell.options)
                 if not cell.fixed: 
-                    cell.value = (cell.options[0])
-                    cell.options.pop(0)
-                self.createColumns()
-                # self.createCells()
-                # self.assignCellLocations()
-                # self.createGrid()
+                    # print(cell.options)
+                    if len(cell.options) != 0:
+                        cell.value = (cell.options[0])
+                        cell.options.pop(0)
+                        self.createGrid()   # updating the grids
+                        cell.updates(self)  # updates rows and columns
+                    else:  # there are no options for the cell to be, must backtrack
+                        for cell in self.cells[cell.row_no-1:]:
+                            assert type(cell) is object 
+                            cell.value = (cell.options[0])
+                            cell.options.pop(0)
+                            self.createGrid()   # updating the grids
+                            cell.updates(self)  # updates rows and columns
+                        #TODO WORK ON BACK TRACKING WHEN THERE ARE NO MORE OPTIONS (ELSE STATEMENT ABOVE) AND ALSO DOCUMENTATION
+        # self.toPuzzle()
+        self.getCost()
+        # print("Cost: " + str(self.getCost()))
+    
+ 
 
-        self.toPuzzle()
-        print("Cost: " + str(self.getCost()))
     
     def getCost(self) -> int:
         '''
@@ -213,60 +268,43 @@ class Puzzle:
         '''
         puzzle_rows = self.toPuzzle()
         assert type(puzzle_rows) is list
-        cost = 0
+        r_num = 0
         for row in puzzle_rows: 
             row_cost = 0
-            puzzle_appeared = []
+            # puzzle_appeared = []
             row_appeared = []
             assert type(row) is list
             for cell in row: 
-                if cell not in puzzle_appeared:  # if the cell hasn't appeared already, add it to the list
-                    puzzle_appeared.append(cell)
-                elif cell not in row_appeared:
+                if cell not in row_appeared:  # if the cell hasn't appeared already, add it to the list
                     row_appeared.append(cell)
+                # elif cell not in row_appeared:
+                #     row_appeared.append(cell)
                 else:
-                    cost += 1
                     row_cost += 1
-            print("Row Cost: " + str(row_cost))
-        return cost
+            r_num += 1
+            print("Row " + str(r_num) + " Cost: " + str(row_cost))
+        return row_cost
 
-#TODO figure out cost, either cost by row or entire puzzle
 
 
-    def toPuzzle(self):
+    def toPuzzle(self) -> list:
         '''
         Puzzle Method
         Actions: Prints each row of the puzzle
         Returns: puzzle_list (list) - list of lists containing the entire puzzle, where each row is a list
         '''
         puzzle_list = []
-        for row in self.cells: 
+        r_num = 0
+        for row in self.cells:
+            r_num += 1
             row_list = []
             for cell in row: 
                 row_list.append(cell.value)
-            print(row_list)
+            print("Row " + str(r_num) + ": " + str(row_list))
             puzzle_list.append(row_list)
-        #print(puzzle_list)
+        print("\n")
         return puzzle_list
 
 
 #TODO self.row, self.col, and self.grid need to be updated after each guess so that the filter works
         
-
-
-# def improve(rows):
-#     # check each value now, starting with the second row (assuming first row is right)
-#     for val in rows[1::]:
-
-        
-
-# def columnCheck(self):
-#     # check at the cell level
-#     options = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-#     options.pop(index(self.rows[0][]))
-#     for item in self.rows: 
-# # 
-
-# def gridCheck(self): 
-    # check at the cell level
-    # if index() = 0, 3, 6 look to the right 2, if index() = 1,4,7 look to the left and right, and if index() == 2,5,8 look to the left two
