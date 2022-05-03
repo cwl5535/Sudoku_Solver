@@ -254,7 +254,6 @@
     * *Type:* `int`
     * *Description:* Grid number that the `Cell` object is located within. Grids are numbered as follows: 
 
-    
         
             Grid Numbering: 
 
