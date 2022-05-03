@@ -1,10 +1,9 @@
-from classes import Cell, Puzzle
+# from sudoku_classes import Cell, Puzzle
 
-puzzle1 = Puzzle('sudoku1.csv')
+# puzzle1 = Puzzle('sudoku1.csv')
 
+# puzzle1.Greedy()
 
-assert type(puzzle1.cells) is list   # make sure cells are in a list
+from sudoku_functions import main
 
-
-cell = puzzle1.cells[8][8]
-puzzle1.Greedy()
+main()
