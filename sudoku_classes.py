@@ -233,7 +233,9 @@ class Puzzle:
         Puzzle Method
         Actions: Used for initial attempt to solve the problem 
         '''
-        
+        print("\n\n---------------------------------\n")
+        print("---      S O L U T I O N      ---\n")
+        print("---------------------------------\n")
         for row in self.cells: 
             for cell in row:
                 cell.filterCellOptions() 
@@ -266,9 +268,15 @@ class Puzzle:
         Puzzle Method
         Returns: cost (int) - the total cost of each row of the puzzle i.e. how many cells will need to be changed after the Greedy
         '''
+        
         puzzle_rows = self.toPuzzle()
         assert type(puzzle_rows) is list
         r_num = 0
+        
+        print("\n\n---------------------------------\n")
+        print("---     R O W   C O S T S     ---\n")
+        print("---------------------------------\n")
+        
         for row in puzzle_rows: 
             row_cost = 0
             # puzzle_appeared = []

@@ -5,8 +5,9 @@ def userInput():
         answer = input("Which sudoku puzzle would you like the computer to solve?\n (To see preview of a puzzle, enter 'p'.)\n").lower()    
         if answer == 'p': 
             preview_question = input("Which puzzle which you like to preview? 1 | 2 | 3 | 4 | 5 | 6 ?\n").strip()
-            # if (int(preview_question) > 6) or (int(preview_question) > 1): 
-            #     print()
+            if (int(preview_question) > 6) or (int(preview_question) > 1): 
+                print("Please enter a valid puzzle number: 1 | 2 | 3 | 4 | 5 | 6 \n")
+                continue
             puzzle = Puzzle("sudoku" + preview_question + ".csv").toPuzzle()
             continue
         elif answer == '1': 
