@@ -189,7 +189,6 @@
 
     * *Type:* `list`
     * *Description:* Contains a 9 x 9 `list` of `lists` that holds all of the puzzle's cells. Each of the 9 `lists` contain 9 `Cell` objects. Each of the 9 lists (of length 9) are the rows of the puzzle. 
-    * *Origin:* 
 
 2. ***self*.filename**
 
