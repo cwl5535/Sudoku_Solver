@@ -189,6 +189,7 @@
 2. *self*.filename
 3. *self*.rows
 4. *self*.columns
+
 ### *Cell*
 
 #### Attributes
