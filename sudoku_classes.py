@@ -191,16 +191,16 @@ class Puzzle:
         Creates: self.cells (Puzzle object attribute containing a list of lists. Each list is a puzzle row containing 'Cell' objects)
         '''
         for row in self.rows:
-            self.cell_row = []  # placeholder list
+            cell_row = []  # placeholder list
             loop = 0 
             for col in row: 
                 # self.cell_row.append(Cell(col, self.rows, row, self.columns[loop]))  # create a matrix of cells
                 if col != '0': 
-                    self.cell_row.append(Cell(col, self.rows, True, row, self.columns[loop]))  # create a matrix of cells
+                    cell_row.append(Cell(col, self.rows, True, row, self.columns[loop]))  # create a matrix of cells
                 else:
-                    self.cell_row.append(Cell(col, self.rows, False, row, self.columns[loop]))  # create a matrix of cells
+                    cell_row.append(Cell(col, self.rows, False, row, self.columns[loop]))  # create a matrix of cells
                 loop += 1
-            self.cells.append(self.cell_row)
+            self.cells.append(cell_row)
         # print(self.cells)
 
     def importData(self):
