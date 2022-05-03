@@ -1,7 +1,7 @@
 
 class Cell:
     def __init__(self, value, rows, fixed, row = [], col = []):
-        # cells also have .row_no and .col_no
+        # cells also have .row_no, .col_no, .grid, and .grid_location
         self.value = value
         self.row = row 
         self.col = col
@@ -76,7 +76,6 @@ class Cell:
             for cell in row: 
                 if cell.row_no == idx: 
                     cell.row = rows[idx]
-                    assert type(cell.row) is list # test
             idx += 1
 
     def updateColumns(self, puzzle_object): 
@@ -95,7 +94,6 @@ class Cell:
             for cell in row: 
                 if cell.col_no == idx: 
                     cell.col = columns[idx]
-                    assert type(cell.col) is list # test
             idx += 1           
 
 class Puzzle:
@@ -110,7 +108,13 @@ class Puzzle:
         self.assignCellLocations()
         self.createGrid()
 
-    def createGrid(self): # want a list of options within in the grid
+    def createGrid(self): 
+        """
+        Puzzle Method
+        Creates 
+        
+        """
+        
         grids = [[],[],[],[],[],[],[],[],[]]
         for row in self.cells: # self.cells are Cell objects
 
@@ -135,7 +139,7 @@ class Puzzle:
                 elif cell.grid_location == 9:
                     grids[8].append(cell.value)
 
-    # assign an attribute 'grid' to each cell based on the cells within its grid
+    # assign an attribute 'grid' to each Cell object based on the cells within its grid
         for row in self.cells:
             for cell in row:       
                 if cell.grid_location == 1:
@@ -158,6 +162,10 @@ class Puzzle:
                     cell.grid = grids[8]
 
     def assignCellLocations(self):
+        """
+        Puzzle Method
+        Determines the row and column a cell is located, then assigns a grid location
+        """
         r = 0
         for row in self.cells: 
             c = 0
@@ -166,7 +174,6 @@ class Puzzle:
                 self.cells[r][c].col_no = self.cells[self.cells[r][c].row_no].index(cell) # each cells column number
                 self.cells[r][c].assignGrid()  #assigns grid number to cell instance
                 c += 1
-                # can only index the list within the list so the row which gives column value
             r += 1
     
     def createColumns(self):
@@ -176,11 +183,12 @@ class Puzzle:
         Creates: 
         Returns: self.columns 
         '''
-        # modifies self.columns matrix to give to each Cell instance to know what other values are in its column
+        # creates a list that contains 9 lists, all of which are each of the columns
+        # this is used later to assign Cell.col
         for row in self.rows:
             loop = 0 
             for col in row: 
-                    self.columns[loop].append(col)  # trying to get [[col_1],[col_2],[col_3],[col_4]]
+                    self.columns[loop].append(col) # [[col_1],[col_2],[col_3],[col_4], [col_5], [col_6], [col_7], [col_8], [col_9]]
                     loop += 1
         return self.columns
 
@@ -194,14 +202,14 @@ class Puzzle:
             cell_row = []  # placeholder list
             loop = 0 
             for col in row: 
-                # self.cell_row.append(Cell(col, self.rows, row, self.columns[loop]))  # create a matrix of cells
                 if col != '0': 
+                    # if not a blank cell (0), make the cell fixed
                     cell_row.append(Cell(col, self.rows, True, row, self.columns[loop]))  # create a matrix of cells
                 else:
+                    # cell is not made fixed
                     cell_row.append(Cell(col, self.rows, False, row, self.columns[loop]))  # create a matrix of cells
                 loop += 1
             self.cells.append(cell_row)
-        # print(self.cells)
 
     def importData(self):
         '''
@@ -239,26 +247,15 @@ class Puzzle:
         for row in self.cells: 
             for cell in row:
                 cell.filterCellOptions() 
-                # print(cell.options)
                 if not cell.fixed: 
-                    # print(cell.options)
                     if len(cell.options) != 0:
                         cell.value = (cell.options[0])
                         cell.options.pop(0)
                         self.createGrid()   # updating the grids
                         cell.updates(self)  # updates rows and columns
-                    else:  # there are no options for the cell to be, must backtrack
+                    else:
                         pass
-                    #     for cell in self.cells[cell.row_no-1:]:
-                    #         assert type(cell) is object 
-                    #         cell.value = (cell.options[0])
-                    #         cell.options.pop(0)
-                    #         self.createGrid()   # updating the grids
-                    #         cell.updates(self)  # updates rows and columns
-                    #     #TODO WORK ON BACK TRACKING WHEN THERE ARE NO MORE OPTIONS (ELSE STATEMENT ABOVE) AND ALSO DOCUMENTATION
-        # self.toPuzzle()
         self.getCost()
-        # print("Cost: " + str(self.getCost()))
     
  
 
@@ -279,14 +276,11 @@ class Puzzle:
         
         for row in puzzle_rows: 
             row_cost = 0
-            # puzzle_appeared = []
             row_appeared = []
             assert type(row) is list
             for cell in row: 
                 if cell not in row_appeared:  # if the cell hasn't appeared already, add it to the list
                     row_appeared.append(cell)
-                # elif cell not in row_appeared:
-                #     row_appeared.append(cell)
                 else:
                     row_cost += 1
             r_num += 1
@@ -312,7 +306,4 @@ class Puzzle:
             puzzle_list.append(row_list)
         print("\n")
         return puzzle_list
-
-
-#TODO self.row, self.col, and self.grid need to be updated after each guess so that the filter works
         
