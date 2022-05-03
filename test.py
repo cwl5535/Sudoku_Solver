@@ -16,6 +16,7 @@ test = [[1,2,3],[4,4,5,1,3]]
 
 print(test[1].index(3))
 
+# testing .gitignore
 # test.remove(1)
 # print(test)
 
