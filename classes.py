@@ -237,8 +237,7 @@ class Puzzle:
         for row in self.cells: 
             for cell in row:
                 cell.filterCellOptions() 
-                print(self.cells[cell.row_no-1])
-                print(cell.options)
+                # print(cell.options)
                 if not cell.fixed: 
                     # print(cell.options)
                     if len(cell.options) != 0:
@@ -247,13 +246,14 @@ class Puzzle:
                         self.createGrid()   # updating the grids
                         cell.updates(self)  # updates rows and columns
                     else:  # there are no options for the cell to be, must backtrack
-                        for cell in self.cells[cell.row_no-1:]:
-                            assert type(cell) is object 
-                            cell.value = (cell.options[0])
-                            cell.options.pop(0)
-                            self.createGrid()   # updating the grids
-                            cell.updates(self)  # updates rows and columns
-                        #TODO WORK ON BACK TRACKING WHEN THERE ARE NO MORE OPTIONS (ELSE STATEMENT ABOVE) AND ALSO DOCUMENTATION
+                        pass
+                    #     for cell in self.cells[cell.row_no-1:]:
+                    #         assert type(cell) is object 
+                    #         cell.value = (cell.options[0])
+                    #         cell.options.pop(0)
+                    #         self.createGrid()   # updating the grids
+                    #         cell.updates(self)  # updates rows and columns
+                    #     #TODO WORK ON BACK TRACKING WHEN THERE ARE NO MORE OPTIONS (ELSE STATEMENT ABOVE) AND ALSO DOCUMENTATION
         # self.toPuzzle()
         self.getCost()
         # print("Cost: " + str(self.getCost()))
