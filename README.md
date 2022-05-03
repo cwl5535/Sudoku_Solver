@@ -183,23 +183,102 @@
 
 ### *Puzzle*
 
-#### Attributes
+#### **Attributes**
 
-1. *self*.cells
-2. *self*.filename
-3. *self*.rows
-4. *self*.columns
+1. ***self*.cells**
+
+    * *Type:* `list`
+    * *Description:* Contains a 9 x 9 `list` of `lists` that holds all of the puzzle's cells. Each of the 9 `lists` contain 9 `Cell` objects. Each of the 9 lists (of length 9) are the rows of the puzzle. 
+    * *Origin:* 
+
+2. ***self*.filename**
+
+    * *Type:* `str`
+    * *Description:* File name of the `.csv` sudoku file used as input. 
+
+
+3. ***self*.rows**
+
+    * *Type:* `list`
+    * *Description:* 9 x 9 `list` of `lists`; Each of the 9 `lists` contain the values in the Puzzle's rows.
+
+
+4. ***self*.columns**
+
+    * *Type:* `list`
+    * *Description:* 9 x 9 `list` of `lists`; Each of the 9 `lists` contain the values in the Puzzle's columns.
+
+
 
 ### *Cell*
 
-#### Attributes
-1. *self*.value
-2. *self*.row
-3. *self*.col
-4. *self*.rows
-5. *self*.col_no
-6. *self*.row_no
-7. *self*.grid_location
-5. *self*.fixed
-6. *self*.options
-7. *self*.grid
+#### **Attributes**
+1. ***self*.value**
+
+    * *Type:* `str`
+    * *Description:* Contains the value of the cell. 
+
+
+2. ***self*.row**
+
+    * *Type:* `list`
+    * *Description:* 9 element `list` containing the row that the `Cell` object is within. 
+
+
+3. ***self*.col**
+
+    * *Type:* `list`
+    * *Description:* 9 element `list` containing the column that the `Cell` object is within. 
+
+
+4. ***self*.rows**
+
+    * *Type:* `list`
+    * *Description:* 9 x 9 `list` of `lists`. Each of the 9 `lists` contains the puzzle's rows. 
+
+
+5. ***self*.col_no**
+
+    * *Type:* `int`
+    * *Description:* Column number that the `Cell` object is located within. 
+
+
+6. ***self*.row_no**
+
+    * *Type:* `int`
+    * *Description:* Row number that the `Cell` object is located within. 
+
+
+7. ***self*.grid_location**
+
+    * *Type:* `int`
+    * *Description:* Grid number that the `Cell` object is located within. Grids are numbered as follows: 
+
+    
+        
+            Grid Numbering: 
+
+            |__1__||__2__||__3__|
+            |__4__||__5__||__6__|
+            |__7__||__8__||__9__|
+            
+
+
+8. ***self*.fixed**
+
+    * *Type:* `bool`
+    * *Description:* Whether or not the cell value is fixed. If the value was given from the beginning, it is **fixed**. 
+
+
+9. ***self*.options**
+
+    * *Type:* `list`
+    * *Description:* `list` of options for the cell to choose from for guessing a solution; 
+        
+            self.options = [1,2,3,4,5,6,7,8,9]
+
+10. ***self*.grid**
+
+    * *Type:* `list`
+    * *Description:* 9 element `list` containing the grid that the `Cell` object is within. 
+
