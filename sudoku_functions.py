@@ -4,7 +4,7 @@ def userInput():
 
     # asks the user which puzzle they would like to solve/preview
     while True:
-        answer = input("Which sudoku puzzle would you like the computer to solve? \n \n 1 | 2 | 3 | 4 | 5 | 6 \n \n (To see preview of a puzzle, enter 'p'.)\n\n").lower()    # .lower() helps prevent case sensitivity
+        answer = input("Which sudoku puzzle would you like the computer to solve? \n \n 1 | 2 | 3 | 4 | 5 | 6 \n \n (To see preview of a puzzle, enter 'p'. To quit, enter 'q'.)\n\n").lower()    # .lower() helps prevent case sensitivity
         if answer == 'p': 
             preview_question = input("Which puzzle which you like to preview? \n \n 1 | 2 | 3 | 4 | 5 | 6 ?\n\n").strip()
 
@@ -14,6 +14,8 @@ def userInput():
                 continue
             puzzle = Puzzle("sudoku" + preview_question + ".csv").toPuzzle()
             continue
+        elif answer == 'q':
+            quit()
         elif answer == '1': 
             puzzle = Puzzle("sudoku1.csv")
             break
