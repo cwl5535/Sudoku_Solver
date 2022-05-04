@@ -1,6 +1,6 @@
 
 class Cell:
-    def __init__(self, value, rows, fixed, row = [], col = []):
+    def __init__(self, value, rows, fixed, row, col):
         # cells also have .row_no, .col_no, .grid, and .grid_location
         self.value = value
         self.row = row 
@@ -12,6 +12,12 @@ class Cell:
     def assignGrid(self):
 
         ''' 
+    Cell Method
+    
+    Description: Assigns a the grid_location atrribute to each cell object based on the cell's location. 
+    Input(s): None
+    Returns: None
+
     Grid Numbering: 
 
     |__1__||__2__||__3__|
@@ -43,6 +49,14 @@ class Cell:
                 self.grid_location = 9
 
     def filterCellOptions(self):
+
+        """
+        Cell Method
+        
+        Description: Used for checking the current row, column, and grid that the cell is and removing any values seen from the options to use for the value of the current cell. 
+        Input(s): None
+        Returns: None
+        """
         # check values in row
         for val in self.row:
             if val in self.options:
@@ -59,42 +73,70 @@ class Cell:
                 self.options.remove(val)
 
     def updates(self, puzzle_object): 
+        """
+        Cell Method
+
+        Description: Wrapper function used for updating columns and rows of a current Cell object after a guess has been made
+        Input(s): Puzzle Object
+        Returns: None
+        """
         self.updateColumns(puzzle_object)
         self.updateRows(puzzle_object)
         # grids updated with Puzzle method, createGrid()
     
     def updateRows(self, puzzle_object): 
+        """
+        Cell Method
+
+        Description: Wrapper function used for updating rows of a current Cell object after a guess has been made
+        Input(s): Puzzle Object
+        Returns: None
+        """
 
         #create updated rows
         rows = [[],[],[],[],[],[],[],[],[]]
-        for row in puzzle_object.cells: 
-            rows.append(row)
+        # idx = 0
+        # for row in puzzle_object.cells: 
+        #     rows[idx].append(row)
+        #     idx += 1
         
         # assign updated rows to Cell objects self.row attribute
+        idx = 0 
         for row in puzzle_object.cells:
-            idx = 0 
             for cell in row: 
+                rows[idx].append(cell.value)
                 if cell.row_no == idx: 
                     cell.row = rows[idx]
+                assert type(rows[0][0]) is str
             idx += 1
 
     def updateColumns(self, puzzle_object): 
-        
+        """
+        Cell Method
+
+        Description: Wrapper function used for updating columns of a current Cell object after a guess has been made
+        Input(s): Puzzle Object
+        Returns: None
+
+        [[col_1],[col_2],[col_3],[col_4],[col_5],[col_6],[col_7],[col_8],[col_9]]
+        """
+
+
         #create updated columns
         columns = [[],[],[],[],[],[],[],[],[]]
         for row in puzzle_object.cells:
             loop = 0 
-            for col in row: 
-                    columns[loop].append(col.value)  # trying to get [[col_1],[col_2],[col_3],[col_4]]
+            for cell in row: 
+                    columns[loop].append(cell.value) 
                     loop += 1
         
-        # assign updated rows to Cell objects self.col attribute
+        # assign updated columns to Cell objects self.col attribute
         for row in puzzle_object.cells:
             idx = 0 
             for cell in row: 
                 if cell.col_no == idx: 
                     cell.col = columns[idx]
-            idx += 1           
+                idx += 1           
 
 class Puzzle:
     def __init__(self, filename):
@@ -111,7 +153,9 @@ class Puzzle:
     def createGrid(self): 
         """
         Puzzle Method
-        Creates 
+        Description: Creates lists, each containing on of the 9 puzzle grids, and assigns them to each cell based on grid location (self.grid_location)
+        Input(s): None
+        Returns: None
         
         """
         
@@ -164,7 +208,9 @@ class Puzzle:
     def assignCellLocations(self):
         """
         Puzzle Method
-        Determines the row and column a cell is located, then assigns a grid location
+        Description: Determines the row and column numbers (self.row_no and self.col_no) that a cell is located and then assigns a grid location
+        Input(s): None
+        Returns: None
         """
         r = 0
         for row in self.cells: 
@@ -179,24 +225,26 @@ class Puzzle:
     def createColumns(self):
         '''
         Puzzle Method
-        Actions: 
-        Creates: 
+        Description: Creates a list that contains 9 lists, all of which are each of the columns. This is used later to assign Cell.col 
+        Input(s): None
         Returns: self.columns 
+        
+        List setup -> [[col_1],[col_2],[col_3],[col_4], [col_5], [col_6], [col_7], [col_8], [col_9]]
         '''
-        # creates a list that contains 9 lists, all of which are each of the columns
-        # this is used later to assign Cell.col
+        
         for row in self.rows:
             loop = 0 
             for col in row: 
-                    self.columns[loop].append(col) # [[col_1],[col_2],[col_3],[col_4], [col_5], [col_6], [col_7], [col_8], [col_9]]
+                    self.columns[loop].append(col) 
                     loop += 1
         return self.columns
 
     def createCells(self):
         '''
         Puzzle Method
-        Actions: Used to create the self.cells attribute
+        Actions: Used to create a 9 x 9 matrix (list) where each of the cells contains a 'Cells' object
         Creates: self.cells (Puzzle object attribute containing a list of lists. Each list is a puzzle row containing 'Cell' objects)
+        Returns: None
         '''
         for row in self.rows:
             cell_row = []  # placeholder list
@@ -214,14 +262,15 @@ class Puzzle:
     def importData(self):
         '''
         Puzzle Method
-        Actions: Used to import and format data. Zeros are inserted where there are empty spaces. 
+        Description: Used to import and format data. Zeros are inserted where there are empty spaces. 
+        Input(s): None
+        Returns: None
         '''
         with open(self.filename) as file:
-            puzzle = []
             for lines in file.readlines():
                 line = lines.rstrip()
                 row = []
-                idx = -1
+                idx = -1  # index starts at -1 to look at last object in list
                 for char in line:
                     row.append(char)  # puts data into a list format
                 for char in row: 
@@ -239,23 +288,45 @@ class Puzzle:
     def Greedy(self):
         '''
         Puzzle Method
-        Actions: Used for initial attempt to solve the problem 
+        Description: Used for initial attempt to solve the problem 
+        Input(s): None
+        Returns: None
         '''
         print("\n\n---------------------------------\n")
         print("---      S O L U T I O N      ---\n")
         print("---------------------------------\n")
         for row in self.cells: 
             for cell in row:
-                cell.filterCellOptions() 
-                if not cell.fixed: 
-                    if len(cell.options) != 0:
+                cell.filterCellOptions()
+                if not cell.fixed:
+                    if len(cell.options) != 0: 
                         cell.value = (cell.options[0])
                         cell.options.pop(0)
                         self.createGrid()   # updating the grids
                         cell.updates(self)  # updates rows and columns
-                    else:
-                        pass
+                    # else: 
+                    #     # try the previous cells OTHER option
+                    #     if cell.col_no == 0:
+                    #         # if all the way to the left side of the puzzle, move UP a row and try again
+                            
+                    #         prev_cell = self.cells[cell.row_no-1][cell.col_no-3]
+                    #         print(prev_cell.options)
+                    #         prev_cell.value = (prev_cell.options[1])
+                    #         self.createGrid()   # updating the grids
+                    #         cell.updates(self)  # updates rows and columns
+                    #     else:
+                    #         prev_cell = self.cells[cell.row_no][cell.col_no-3]
+                    #         print(prev_cell.options)
+                    #         prev_cell.value = (prev_cell.options[1])
+                    #         self.createGrid()   # updating the grids
+                    #         cell.updates(self)  # updates rows and columns
+                    #     self.Greedy()
         self.getCost()
+        # t = self.cells[2][8]
+        # print("\n\n\n" + str(t.options))
+        # print(str(t.fixed))
+        # print(str(t.row))
+        # print(str(t.col))
     
  
 
@@ -263,11 +334,12 @@ class Puzzle:
     def getCost(self) -> int:
         '''
         Puzzle Method
-        Returns: cost (int) - the total cost of each row of the puzzle i.e. how many cells will need to be changed after the Greedy
+        Description: Used to get the cost of each row within the puzzle
+        Input(s): None
+        Returns: row_cost (int) - the total cost of each row of the puzzle i.e. how many cells will need to be changed after the Greedy
         '''
         
         puzzle_rows = self.toPuzzle()
-        assert type(puzzle_rows) is list
         r_num = 0
         
         print("\n\n---------------------------------\n")
@@ -276,10 +348,11 @@ class Puzzle:
         
         for row in puzzle_rows: 
             row_cost = 0
-            row_appeared = []
-            assert type(row) is list
+            row_appeared = []   # elements that have appeared in the row will be added to this list
             for cell in row: 
-                if cell not in row_appeared:  # if the cell hasn't appeared already, add it to the list
+                if cell == "0":
+                    row_cost += 1 
+                elif cell not in row_appeared:  # if the cell hasn't appeared already, add it to the list
                     row_appeared.append(cell)
                 else:
                     row_cost += 1
@@ -293,7 +366,8 @@ class Puzzle:
         '''
         Puzzle Method
         Actions: Prints each row of the puzzle
-        Returns: puzzle_list (list) - list of lists containing the entire puzzle, where each row is a list
+        Input(s): None
+        Returns: puzzle_list (list) - list of lists containing the entire puzzle values, where each row is a list
         '''
         puzzle_list = []
         r_num = 0
