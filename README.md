@@ -13,9 +13,9 @@
 
         1 | 2 | 3 | 4 | 5 | 6
 
-        (To see preview of a puzzle, enter 'p'.) 
+        (To see preview of a puzzle, enter 'p'. To quit, enter 'q'.) 
 
-    You have 2 options here: 
+    You have 3 options here (Solve, Preview, or Quit): 
     
     1.  #### *Solve a Puzzle*
     
@@ -27,7 +27,7 @@
     
     2. #### *Preview a Puzzle* 
     
-        (Enter 'p' [not case sensitive] to preview a puzzle.)
+        (Enter `p` [not case sensitive] to preview a puzzle.)
     
             p
                 
@@ -59,8 +59,13 @@
 
                 1 | 2 | 3 | 4 | 5 | 6
 
-                (To see preview of a puzzle, enter 'p'.)
+                (To see preview of a puzzle, enter 'p'. To quit, enter 'q'.)
             Enter a puzzle number to solve the desired puzzle.  
+    3. #### *Quitting a Puzzle*
+        * To quit, enter `q` into the command line. 
+            
+                q
+
 3. ### Solving the Puzzle         
     
     * Once you've entered a puzzle number, the computer will solve the puzzle. In this example, the puzzle is **Puzzle 1**. 
